@@ -39,7 +39,7 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
   const feedback = { good, neutral, bad };
-  
+
   const anecdotes = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -50,14 +50,22 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-  
+
+  const [anecdoteVotes, setAnecdoteVotes] =
+    useState(Array(anecdotes.length).fill(0));
+
   const [selected, setSelected] = useState(
-    Math.floor(Math.random()*anecdotes.length));
+    Math.floor(Math.random() * anecdotes.length));
 
   const selectRandom = () => {
-    const random = Math.floor(Math.random()*anecdotes.length);
+    const random = Math.floor(Math.random() * anecdotes.length);
     setSelected(random);
-    console.log(random, anecdotes[random]);
+  }
+
+  const vote = (position) => {
+    const copy = { ...anecdoteVotes };
+    copy[position] += 1;
+    setAnecdoteVotes(copy);
   }
 
   return (
@@ -69,8 +77,10 @@ const App = () => {
       <h1>Statistics</h1>
       <Statistics feedback={feedback} />
       <h1>Anecdotes</h1>
-      <Button onClick={selectRandom} text="Next anecdote" /><br/>
-      {anecdotes[selected]}
+      <Button onClick={() => vote(selected)} text="Vote" />
+      <Button onClick={selectRandom} text="Next anecdote" /><br />
+      {anecdotes[selected]}<br />
+      <p>has {anecdoteVotes[selected]} votes</p>
     </div>
   )
 }

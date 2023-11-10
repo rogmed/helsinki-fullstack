@@ -4,7 +4,7 @@ const Button = ({ onClick, text }) =>
   <button onClick={onClick}>{text}</button>
 
 const StatisticLine = ({ text, value }) =>
-  <>{text} {value}</>
+  <tr><td>{text}</td><td>{value}</td></tr>
 
 const Statistics = ({ feedback }) => {
   const { good, neutral, bad } = feedback;
@@ -20,14 +20,16 @@ const Statistics = ({ feedback }) => {
   const positive = (good / total) * 100;
 
   return (
-    <div>
-      <StatisticLine text="good" value={good} /><br />
-      <StatisticLine text="neutral" value={neutral} /><br />
-      <StatisticLine text="bad" value={bad} /><br />
-      <StatisticLine text="all" value={total} /><br />
-      <StatisticLine text="average" value={average} /><br />
-      <StatisticLine text="positive" value={positive + "%"} /><br />
-    </div>
+    <table>
+      <tbody>
+        <StatisticLine text="good" value={good} />
+        <StatisticLine text="neutral" value={neutral} />
+        <StatisticLine text="bad" value={bad} />
+        <StatisticLine text="all" value={total} />
+        <StatisticLine text="average" value={average} />
+        <StatisticLine text="positive" value={positive + "%"} />
+      </tbody>
+    </table>
   )
 }
 

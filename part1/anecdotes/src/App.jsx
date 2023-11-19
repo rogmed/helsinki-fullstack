@@ -3,6 +3,23 @@ import { useState } from 'react'
 const Button = ({ onClick, text }) =>
   <button onClick={onClick}>{text}</button>
 
+const Anecdote = ({ anecdote, votes }) => (
+  <>
+    <p>{anecdote}</p>
+    <p>has {votes} votes</p>
+  </>
+)
+
+const MaxAnecdote = ({ anecdotes, anecdoteVotes }) => {
+  const index = indexOfMax(anecdoteVotes);
+
+  return (
+    <>
+      <Anecdote anecdote={anecdotes[index]} votes={anecdoteVotes[index]} />
+    </>
+  )
+}
+
 const App = () => {
 
   const anecdotes = [
@@ -28,7 +45,7 @@ const App = () => {
   }
 
   const vote = (position) => {
-    const copy = { ...anecdoteVotes };
+    const copy = [...anecdoteVotes];
     copy[position] += 1;
     setAnecdoteVotes(copy);
   }
@@ -38,10 +55,29 @@ const App = () => {
       <h1>Anecdotes</h1>
       <Button onClick={() => vote(selected)} text="Vote" />
       <Button onClick={selectRandom} text="Next anecdote" /><br />
-      {anecdotes[selected]}<br />
-      <p>has {anecdoteVotes[selected]} votes</p>
+      <Anecdote anecdote={anecdotes[selected]} votes={anecdoteVotes[selected]} />
+      <h1>Anecdote with most votes</h1>
+      <MaxAnecdote anecdotes={anecdotes} anecdoteVotes={anecdoteVotes} />
     </div>
   )
+}
+
+function indexOfMax(arr) {
+  if (arr.length == 0) {
+    return -1;
+  }
+
+  let max = arr[0];
+  let maxIndex = 0;
+
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] > max) {
+      maxIndex = i;
+      max = arr[i];
+    }
+  }
+
+  return maxIndex;
 }
 
 export default App

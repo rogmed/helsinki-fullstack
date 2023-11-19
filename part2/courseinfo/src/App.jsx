@@ -2,10 +2,11 @@ const Header = ({ text }) => <h1>{text}</h1>
 
 
 const Total = ({ course }) => {
-  let total = 0;
-  course.parts.forEach(part => {
-    total += part.exercises
-  });
+  const parts = course.parts;
+  const total = parts.reduce(
+    (sum, part) => sum + part.exercises,
+    0
+  );
 
   return (
     <p><b>Total of {total} exercises</b></p>

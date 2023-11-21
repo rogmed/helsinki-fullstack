@@ -1,8 +1,8 @@
 const PersonForm = (props) => {
-    const { addName, newName, handleNameChange, newNumber,
+    const { addPerson, newName, handleNameChange, newNumber,
       handleNumberChange } = props;
     return (
-      <form onSubmit={addName}>
+      <form onSubmit={addPerson}>
         <div>
           name:
           <input

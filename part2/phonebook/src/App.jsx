@@ -18,7 +18,7 @@ const App = () => {
       });
   }, [])
 
-  const addName = (event) => {
+  const addPerson = (event) => {
     event.preventDefault();
 
     if (newName != '') {
@@ -36,6 +36,15 @@ const App = () => {
 
       }
     }
+  }
+
+  const deletePerson = (id) => {
+    console.log(`App: Delete ${id}`);
+    personsService
+      .remove(id)
+      .then(() => {
+        setPersons(persons.filter(p => p.id !== id));
+      });
   }
 
   const handleFilterChange = (event) => {
@@ -56,14 +65,18 @@ const App = () => {
       <Filter value={filter} onChange={handleFilterChange} />
       <h2>Add contact</h2>
       <PersonForm
-        addName={addName}
+        addPerson={addPerson}
         newName={newName}
         handleNameChange={handleNameChange}
         newNumber={newNumber}
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter} />
+      <Persons
+        persons={persons}
+        filter={filter}
+        deletePerson={deletePerson}
+      />
     </div>
   )
 }

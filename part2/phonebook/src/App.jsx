@@ -6,8 +6,8 @@ import personsService from './services/persons.js'
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
+  const [tbName, setTbName] = useState('');
+  const [tbNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
@@ -21,25 +21,38 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
 
-    if (newName != '') {
-      if (persons.map(p => p.name).includes(newName)) {
-        alert(`${newName} is already added to phonebook.`);
-      } else {
-        const newPerson = { name: newName, number: newNumber };
+    const newPerson = {
+      name: tbName.trim(),
+      number: tbNumber.trim()
+    }
+
+    if (newPerson.name != '') {
+
+      const foundPerson = persons.find(p => p.name.toLowerCase() === newPerson.name.toLowerCase());
+      const message = `${newPerson.name} is already added to phonebook. Replace the old number with a new one?`;
+
+      if (foundPerson != null && confirm(message)) {
+        personsService
+          .update(foundPerson.id, newPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(p => p.id !== foundPerson.id ? p : returnedPerson));
+          });
+      }
+
+      if (foundPerson == null) {
         personsService
           .create(newPerson)
           .then(returnedPerson => {
             setPersons(persons.concat(returnedPerson));
-            setNewName('');
-            setNewNumber('');
           });
-
       }
+      
+      setTbName('');
+      setNewNumber('');
     }
   }
 
   const deletePerson = (id) => {
-    console.log(`App: Delete ${id}`);
     personsService
       .remove(id)
       .then(() => {
@@ -52,7 +65,7 @@ const App = () => {
   }
 
   const handleNameChange = (event) => {
-    setNewName(event.target.value);
+    setTbName(event.target.value);
   }
 
   const handleNumberChange = (event) => {
@@ -66,9 +79,9 @@ const App = () => {
       <h2>Add contact</h2>
       <PersonForm
         addPerson={addPerson}
-        newName={newName}
+        newName={tbName}
         handleNameChange={handleNameChange}
-        newNumber={newNumber}
+        newNumber={tbNumber}
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>

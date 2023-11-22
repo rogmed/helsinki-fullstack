@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Filter from './components/Filter.jsx'
+import Notification from './components/Notification.jsx'
 import Persons from './components/Persons.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import personsService from './services/persons.js'
@@ -9,6 +10,7 @@ const App = () => {
   const [tbName, setTbName] = useState('');
   const [tbNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     personsService
@@ -17,6 +19,15 @@ const App = () => {
         setPersons(initialData)
       });
   }, [])
+
+  const showNotification = (message) => {
+    setMessage(
+      `${message}`
+    )
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -36,7 +47,8 @@ const App = () => {
           .update(foundPerson.id, newPerson)
           .then(returnedPerson => {
             setPersons(persons.map(p => p.id !== foundPerson.id ? p : returnedPerson));
-          });
+          })
+          .then(showNotification(`Changed number of ${foundPerson.name}`));
       }
 
       if (foundPerson == null) {
@@ -44,9 +56,10 @@ const App = () => {
           .create(newPerson)
           .then(returnedPerson => {
             setPersons(persons.concat(returnedPerson));
-          });
+          })
+          .then(showNotification(`Added ${newPerson.name}.`));
       }
-      
+
       setTbName('');
       setNewNumber('');
     }
@@ -75,6 +88,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter value={filter} onChange={handleFilterChange} />
       <h2>Add contact</h2>
       <PersonForm

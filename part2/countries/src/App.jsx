@@ -13,7 +13,6 @@ function App() {
       .then(countries => {
         const data = countries.data;
         setCountries(data);
-        console.log('data :>> ', data);
       })
   }, [])
 

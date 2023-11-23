@@ -1,6 +1,10 @@
 import Country from './Country'
 
-const Countries = ({ countries, filter }) => {
+const Countries = ({ countries, filter, setFilter }) => {
+
+    const showCountry = (name) => {
+        setFilter(name);
+    }
 
     if (countries) {
         countries = countries.filter(c => c.name.common.toLowerCase().includes(filter.toLowerCase()));
@@ -25,7 +29,7 @@ const Countries = ({ countries, filter }) => {
         } else {
             return (
                 countries.map(c =>
-                    <p key={c.name.common}>{c.name.common}</p>
+                    <p key={c.name.common}>{c.name.common} <button onClick={() => showCountry(c.name.common)}>show</button></p>
                 )
             )
         }

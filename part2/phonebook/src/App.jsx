@@ -38,41 +38,35 @@ const App = () => {
       number: tbNumber.trim()
     }
 
-    if (newPerson.name != '') {
+    const foundPerson = persons.find(p => p.name.toLowerCase() === newPerson.name.toLowerCase());
+    const message = `${newPerson.name} is already added to phonebook. Replace the old number with a new one?`;
 
-      const foundPerson = persons.find(p => p.name.toLowerCase() === newPerson.name.toLowerCase());
-      const message = `${newPerson.name} is already added to phonebook. Replace the old number with a new one?`;
+    if (foundPerson != null && confirm(message)) {
+      personsService
+        .update(foundPerson.id, newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(p => p.id !== foundPerson.id ? p : returnedPerson));
+        })
+        .then(showNotification(
+          `Changed number of ${foundPerson.name}`,
+          false))
+        .catch(error =>
+          showNotification(error.response.data.error, true)
+        );
+    }
 
-      if (foundPerson != null && confirm(message)) {
-        personsService
-          .update(foundPerson.id, newPerson)
-          .then(returnedPerson => {
-            setPersons(persons.map(p => p.id !== foundPerson.id ? p : returnedPerson));
-          })
-          .then(showNotification(
-            `Changed number of ${foundPerson.name}`,
-            false))
-          .catch(error =>
-            showNotification(
-              `Information of ${foundPerson.name} has already
-             been removed from server`,
-             true)
-          );
-      }
-
-      if (foundPerson == null) {
-        personsService
-          .create(newPerson)
-          .then(returnedPerson => {
-            setPersons(persons.concat(returnedPerson));
-          })
-          .then(showNotification(
-            `Added ${newPerson.name}.`),
-            false);
-      }
-
-      setTbName('');
-      setNewNumber('');
+    if (foundPerson == null) {
+      personsService
+        .create(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson));
+          showNotification(`Added ${newPerson.name}.`, false);
+          setTbName('');
+          setNewNumber('');
+        })
+        .catch(error => {
+          showNotification(error.response.data.error, true);
+        });
     }
   }
 

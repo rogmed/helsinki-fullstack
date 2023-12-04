@@ -7,6 +7,7 @@ const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 const blogsRouter = require('./controllers/blogs')
 
+mongoose.set("bufferTimeoutMS", 30000)
 mongoose.connect(config.MONGODB_URI)
     .then(() => {        
         logger.info('connected to MongoDB')

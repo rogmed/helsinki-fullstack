@@ -8,7 +8,8 @@ content-type: application/json
     "title": "Helsinki Fullstack",
     "author": "rogeliomdn",
     "url": "https://github.com/rogmed/helsinki-fullstack",
-    "likes": 500
+    "likes": 500,
+    "userId": "6571d4e10104b2d35495f326"
 }
 
 ###
@@ -19,7 +20,20 @@ content-type: application/json
     "title": "POSTTTTT",
     "author": "Matti Luukkainen",
     "url": "https://fullstackopen.com/en/",
-    "likes": 900000
+    "likes": 900000,
+    "user": "6571c1589298dba48489c00f"
+}
+
+###
+POST http://localhost:3003/api/blogs
+content-type: application/json
+
+{
+    "title": "Cosas de casa",
+    "author": "Rogelio Medina",
+    "url": "https://fullstackopen.com/en/",
+    "likes": 77777,
+    "user": "6571d4e10104b2d35495f326"
 }
 
 ###

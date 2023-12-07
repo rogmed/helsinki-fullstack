@@ -145,6 +145,24 @@ describe('DELETE', () => {
     })
 })
 
+describe('PUT', () => {
+    test('by id can be used to updated votes succesfuly', async () => {
+        const blogsAtStart =  await helper.blogsInDb()
+        let blogToUpdate = blogsAtStart[0]
+        blogToUpdate.likes += 100
+
+        console.log('blogToUpdate :>> ', blogToUpdate);
+
+        await api
+        .put(url + blogToUpdate.id)
+        .send(blogToUpdate)
+        .expect(204)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd[0].likes).toBe(blogToUpdate.likes)
+    })
+})
+
 afterAll(async () => {
     await mongoose.connection.close()
 })

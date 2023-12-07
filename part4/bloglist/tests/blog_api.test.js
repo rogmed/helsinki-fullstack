@@ -151,8 +151,6 @@ describe('PUT', () => {
         let blogToUpdate = blogsAtStart[0]
         blogToUpdate.likes += 100
 
-        console.log('blogToUpdate :>> ', blogToUpdate);
-
         await api
         .put(url + blogToUpdate.id)
         .send(blogToUpdate)

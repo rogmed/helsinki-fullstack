@@ -6,7 +6,7 @@ const Blog = require('../models/blog')
 const helper = require('./test_helper')
 const _ = require('lodash')
 
-const url = '/api/blogs'
+const url = '/api/blogs/'
 
 beforeEach(async () => {
     await Blog.deleteMany({})
@@ -121,6 +121,27 @@ describe('POST', () => {
 
         const blogsAtEnd = await helper.blogsInDb()
         expect(blogsAtEnd).toHaveLength(helper.blogs.length)
+    })
+})
+
+describe('DELETE', () => {
+    test('by id succeeds with status code 204', async () => {
+        const blogsAtStart =  await helper.blogsInDb()
+        const blogToDelete = blogsAtStart[0]
+
+        await api.delete(url + blogToDelete.id).expect(204)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
+    })
+
+    test('by malformed id fails with status code 400', async () => {
+        const blogsAtStart =  await helper.blogsInDb()
+
+        await api.delete(url + '5').expect(400)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
     })
 })
 

@@ -7,10 +7,17 @@ const helper = require('./test_helper')
 const _ = require('lodash')
 
 const url = '/api/blogs/'
+let token
 
 beforeEach(async () => {
     await Blog.deleteMany({})
     await Blog.insertMany(helper.blogs)
+
+    const login = await api
+    .post('/api/login/')
+    .send({ username: "root", password: "sekret" })
+
+    token = login.body.token
 }, 300000)
 
 describe('GET', () => {
@@ -46,11 +53,12 @@ describe('POST', () => {
             title: "Test blog",
             author: "Tester Testing",
             url: "https://jestjs.io/",
-            likes: 10
+            likes: 10,
         }
 
         await api
             .post(url)
+            .set('authorization', `bearer ${token}`)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -60,6 +68,7 @@ describe('POST', () => {
 
         const addedBlog = blogsAtEnd[blogsAtEnd.length - 1]
         newBlog.id = addedBlog.id
+        newBlog.user = addedBlog.user
         expect(addedBlog).toEqual(newBlog)
     })
 
@@ -80,6 +89,7 @@ describe('POST', () => {
 
         await api
             .post(url)
+            .set('authorization', `bearer ${token}`)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -89,6 +99,7 @@ describe('POST', () => {
 
         const addedBlog = blogsAtEnd[blogsAtEnd.length - 1]
         newBlog.id = addedBlog.id
+        newBlog.user = addedBlog.user
         newBlog.likes = 0
         expect(addedBlog).toEqual(newBlog)
     })
@@ -101,6 +112,7 @@ describe('POST', () => {
 
         await api
             .post(url)
+            .set('authorization', `bearer ${token}`)
             .send(newBlog)
             .expect(400)
 
@@ -116,6 +128,7 @@ describe('POST', () => {
 
         await api
             .post(url)
+            .set('authorization', `bearer ${token}`)
             .send(newBlog)
             .expect(400)
 
@@ -126,7 +139,7 @@ describe('POST', () => {
 
 describe('DELETE', () => {
     test('by id succeeds with status code 204', async () => {
-        const blogsAtStart =  await helper.blogsInDb()
+        const blogsAtStart = await helper.blogsInDb()
         const blogToDelete = blogsAtStart[0]
 
         await api.delete(url + blogToDelete.id).expect(204)
@@ -136,7 +149,7 @@ describe('DELETE', () => {
     })
 
     test('by malformed id fails with status code 400', async () => {
-        const blogsAtStart =  await helper.blogsInDb()
+        const blogsAtStart = await helper.blogsInDb()
 
         await api.delete(url + '5').expect(400)
 
@@ -147,14 +160,14 @@ describe('DELETE', () => {
 
 describe('PUT', () => {
     test('by id can be used to updated votes succesfuly', async () => {
-        const blogsAtStart =  await helper.blogsInDb()
+        const blogsAtStart = await helper.blogsInDb()
         let blogToUpdate = blogsAtStart[0]
         blogToUpdate.likes += 100
 
         await api
-        .put(url + blogToUpdate.id)
-        .send(blogToUpdate)
-        .expect(204)
+            .put(url + blogToUpdate.id)
+            .send(blogToUpdate)
+            .expect(204)
 
         const blogsAtEnd = await helper.blogsInDb()
         expect(blogsAtEnd[0].likes).toBe(blogToUpdate.likes)

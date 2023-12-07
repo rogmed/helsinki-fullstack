@@ -9,3 +9,23 @@ content-type: application/json
     "name": "Rogelio Medina",
     "password": "1234"
 }
+
+###
+POST http://localhost:3003/api/users
+content-type: application/json
+
+{
+    "username": "us",
+    "name": "Rogelio Medina",
+    "password": "1234"
+}
+
+###
+POST http://localhost:3003/api/users
+content-type: application/json
+
+{
+    "username": "rogeliomdn",
+    "name": "Rogelio Medina",
+    "password": "12345678"
+}

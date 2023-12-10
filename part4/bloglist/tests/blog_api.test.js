@@ -14,8 +14,8 @@ beforeEach(async () => {
     await Blog.insertMany(helper.blogs)
 
     const login = await api
-    .post('/api/login/')
-    .send({ username: "root", password: "sekret" })
+        .post('/api/login/')
+        .send({ username: "root", password: "sekret" })
 
     token = login.body.token
 }, 300000)
@@ -138,11 +138,14 @@ describe('POST', () => {
 })
 
 describe('DELETE', () => {
-    test('by id succeeds with status code 204', async () => {
+    test('by id with creator token succeeds with status code 204', async () => {
         const blogsAtStart = await helper.blogsInDb()
         const blogToDelete = blogsAtStart[0]
 
-        await api.delete(url + blogToDelete.id).expect(204)
+        await api
+            .delete(url + blogToDelete.id)
+            .set('authorization', `bearer ${token}`)
+            .expect(204)
 
         const blogsAtEnd = await helper.blogsInDb()
         expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
@@ -152,6 +155,37 @@ describe('DELETE', () => {
         const blogsAtStart = await helper.blogsInDb()
 
         await api.delete(url + '5').expect(400)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+    })
+
+    test('without token fails with status code 401', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToDelete = blogsAtStart[0]
+
+        const response = await api
+            .delete(url + blogToDelete.id)
+            .expect(401)
+
+        expect(response.body)
+            .toEqual({ error: 'jwt must be provided' })
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+    })
+
+    test('with wrong token fails with status code 401', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToDelete = blogsAtStart[1]
+
+        const response = await api
+            .delete(url + blogToDelete.id)
+            .set('authorization', `bearer ${token}`)
+            .expect(401)
+
+        expect(response.body)
+            .toEqual({ error: 'blog created by another user.' })
 
         const blogsAtEnd = await helper.blogsInDb()
         expect(blogsAtEnd).toHaveLength(blogsAtStart.length)

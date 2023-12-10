@@ -7,14 +7,17 @@ const helper = require('./test_helper')
 const bcrypt = require('bcrypt')
 
 const url = '/api/users/'
+let token
 
 beforeEach(async () => {
     await User.deleteMany({})
+    await User.insertMany(helper.users)
 
-    const passwordHash = await bcrypt.hash('sekret', 10)
-    const user = new User({ username: 'root', passwordHash })
+    const login = await api
+        .post('/api/login/')
+        .send({ username: "root", password: "sekret" })
 
-    await user.save()
+    token = login.body.token
 }, 300000)
 
 describe('when there is initially one user in db', () => {
@@ -93,7 +96,7 @@ describe('POST', () => {
 
         expect(response.body).toEqual({
             error: 'User validation failed: username: Path `username` is required.'
-        });
+        })
 
         const usersAtEnd = await helper.usersInDb()
         expect(usersAtEnd).toHaveLength(usersAtStart.length)

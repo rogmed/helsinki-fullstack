@@ -3,7 +3,7 @@ GET http://localhost:3003/api/blogs
 ###
 POST http://localhost:3003/api/blogs
 content-type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvZ2VsaW9tZG4iLCJpZCI6IjY1NzFmYjVkZjY2ZGIzNDRlNTQ1OWZhMyIsImlhdCI6MTcwMTk2ODc0NH0.RbpZEjXmWCYMgmE72PD_uyL0UiKe4YavcxX34QXrqTs
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvZ2VsaW9tZG4iLCJpZCI6IjY1NzVkODgzZGQxMDg4YjBjOGIxZWM4ZCIsImlhdCI6MTcwMjIyMjAwNH0.q0rURUPq-6Ojkq3Gi6NeOUmyGbjnti201II45ucBhBs
 
 {
     "title": "OTRO 2",
@@ -43,3 +43,7 @@ content-type: application/json
 {
     "likes": 400
 }
+
+###
+DELETE http://localhost:3003/api/blogs/6575d8ccdd1088b0c8b1ec99
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvZ2VsaW9tZG4iLCJpZCI6IjY1NzVkODgzZGQxMDg4YjBjOGIxZWM4ZCIsImlhdCI6MTcwMjIyMjAwNH0.q0rURUPq-6Ojkq3Gi6NeOUmyGbjnti201II45ucBhBs

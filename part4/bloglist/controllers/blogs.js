@@ -1,8 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const logger = require('../utils/logger')
-const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog
@@ -12,13 +9,12 @@ blogsRouter.get('/', async (request, response) => {
 })
 
 blogsRouter.post('/', async (request, response) => {
-    const body = request.body
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!decodedToken.id) {
+    const user = request.user
+    if (!user) {
         return response.status(401).json({ error: 'token invalid' })
     }
-    const user = await User.findById(decodedToken.id)
 
+    const body = request.body
     const blog = new Blog({
         title: body.title,
         author: body.author,
@@ -36,8 +32,11 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
     const blog = await Blog.findById(request.params.id)
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    const user = await User.findById(decodedToken.id)
+    const user = request.user
+    
+    if (!user) {
+        response.status(401).json({ error: 'jwt must be provided' })
+    }
 
     if (blog.user.toString() === user.id.toString()) {
         await Blog.deleteOne(blog)
@@ -45,6 +44,7 @@ blogsRouter.delete('/:id', async (request, response) => {
     } else {
         response.status(401).json({ error: 'blog created by another user.' })
     }
+
 })
 
 blogsRouter.put('/:id', async (request, response) => {

@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import loginService from '../services/login'
+import Notification from './Notification'
 
 const LoginForm = (props) => {
   const [username, setUsername] = useState('')
@@ -31,7 +32,7 @@ const LoginForm = (props) => {
     return (
       <>
         <h1>log in to application</h1>
-        <p>{errorMessage}</p>
+        <Notification message={errorMessage} error={true} />
         <form onSubmit={handleLogin}>
           <div>
             username

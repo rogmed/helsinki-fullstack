@@ -7,15 +7,19 @@ const Blogs = (props) => {
   const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
+    updateBlogs()
+  }, [])
+
+  const updateBlogs = () => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
     )
-  }, [])
+  }
 
   if (props.user) {
     return (
       <>
-        <BlogForm />
+        <BlogForm updateBlogs={updateBlogs} />
         <h2>blogs</h2>
         <p>{props.user.username} is logged in
           &nbsp;<button onClick={props.handleLogout}>logout</button></p>

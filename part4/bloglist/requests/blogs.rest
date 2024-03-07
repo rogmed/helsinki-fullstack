@@ -3,7 +3,7 @@ GET http://localhost:3003/api/blogs
 ###
 POST http://localhost:3003/api/blogs
 content-type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvZ2VsaW9tZG4iLCJpZCI6IjY1NzVkODgzZGQxMDg4YjBjOGIxZWM4ZCIsImlhdCI6MTcwMjIyMjAwNH0.q0rURUPq-6Ojkq3Gi6NeOUmyGbjnti201II45ucBhBs
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY1NzVlMDU1YjE1ODFmMTJlOGM1Yjg1ZCIsImlhdCI6MTcwOTgxMjE0OX0.rF6L4zP6I6-i9nkBdkwGdNbD_HZ_Om-hvhyfdaZusRs
 
 {
     "title": "OTRO 2",
